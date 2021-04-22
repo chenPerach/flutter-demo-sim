@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -75,19 +77,19 @@ class HomePage extends StatelessWidget {
       body: ListView(
         children: [
           RuleW(
-            rule: dummy_rule,
+            law: dummy_rule,
           ),
           RuleW(
-            rule: dummy_rule,
+            law: dummy_rule,
           ),
           RuleW(
-            rule: dummy_rule,
+            law: dummy_rule,
           ),
           RuleW(
-            rule: dummy_rule,
+            law: dummy_rule,
           ),
           RuleW(
-            rule: dummy_rule,
+            law: dummy_rule,
           ),
 
         ],
@@ -97,8 +99,8 @@ class HomePage extends StatelessWidget {
 }
 
 class RuleW extends StatelessWidget {
-  final Law rule;
-  RuleW({this.rule});
+  final Law law;
+  RuleW({this.law});
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +115,7 @@ class RuleW extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "LAW #${rule.id.toString()}",
+                  "LAW #${law.id.toString()}",
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w400,
@@ -128,13 +130,13 @@ class RuleW extends StatelessWidget {
             Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                "${rule.content.type.toLowerCase().replaceAll("_", " ")}: dan",
+                "${law.content.type.toLowerCase().replaceAll("_", " ")}: dan",
                 style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400),
               ),
             ),
             SizedBox(height: 5,),
             ExpansionTile(title: Text("details"),children: [
-
+              ContentW(law)
             ],)
           ],
         ),
@@ -153,7 +155,7 @@ class RuleW extends StatelessWidget {
           width: 5,
         ),
         Text(
-          rule.content.type.toLowerCase().replaceAll("_", " "),
+          law.content.type.toLowerCase().replaceAll("_", " "),
           style: TextStyle(color: typeColor),
         ),
         SizedBox(
@@ -163,3 +165,57 @@ class RuleW extends StatelessWidget {
     ));
   }
 }
+class ContentW extends StatelessWidget {
+  final Law law;
+  ContentW(this.law);
+  @override
+  Widget build(BuildContext context) {
+    switch (this.law.content.type) {
+      case "ADD_MEMBER":
+        return _member(law.content);
+        break;
+      default:
+      return Container(child: Text("nothing here...."),);
+    }
+  }
+  Widget _member(ContentAddMember content){
+    return Table(columnWidths: <int,TableColumnWidth> {
+      0: FlexColumnWidth(0.4),
+      1: FlexColumnWidth(0.8)
+    },
+    children: [
+      TableRow(children: [
+        Container(child: _row_head("Legislator".toUpperCase()),padding: EdgeInsets.all(3)),
+        Container(child: _table_content(this.law.legislator.name),padding: EdgeInsets.all(3)),
+      ]),
+      TableRow(children: [
+        Container(child: _row_head("Date".toUpperCase()),padding: EdgeInsets.all(3),),
+        Container(child: _table_content( DateFormat("yyyy/mm/dd kk:mm").format(this.law.timeStamp)),padding: EdgeInsets.all(3)),
+      ]),
+      TableRow(children: [
+        Container(child: _row_head("Votes".toUpperCase()),padding: EdgeInsets.all(3),),
+        Container(child: _table_content(""),padding: EdgeInsets.all(3)),
+      ]),
+      TableRow(children: [
+        Container(child: _row_head("status".toUpperCase()),padding: EdgeInsets.all(3),),
+        Container(child: _table_content(law.status.toLowerCase().replaceAll("_", " ")),padding: EdgeInsets.all(3)),
+
+      ]),
+      TableRow(children: [
+        Container(child: _row_head("results in".toUpperCase()),padding: EdgeInsets.all(3),),
+        Container(child: CountdownTimer(widgetBuilder: (context, time) {
+          if(time == null) return Text("time has passed");
+          return _table_content("${time.hours}h ${time.min}m ${time.sec}s");
+        } ,endTime: law.timeStamp.add(Duration(days: 1)).millisecondsSinceEpoch),padding: EdgeInsets.all(3)),
+      ]),
+    ],);
+
+  }
+  Widget _row_head(String text){
+    return Text(text,style: TextStyle(color: Colors.grey[500],fontWeight: FontWeight.w400,fontSize: 17),);
+  }
+  Widget _table_content(String text){
+    return Text(text,style:  TextStyle(color: Colors.black,fontWeight: FontWeight.w400,fontSize: 17),);
+  }
+}
+
