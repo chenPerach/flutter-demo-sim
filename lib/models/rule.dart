@@ -1,103 +1,95 @@
+import 'package:democracy_sim/models/Content.dart';
+import 'package:democracy_sim/models/Member.dart';
+import 'package:democracy_sim/models/Votes.dart';
 import 'package:flutter/cupertino.dart';
 
-class Law{
+class Law {
   int id;
   Member legislator;
   String status;
   DateTime timeStamp;
-  bool constitutional,anonymousLegislator;
+  bool constitutional, anonymousLegislator;
   Content content;
-  Law({this.id,this.legislator,this.status,this.timeStamp,this.anonymousLegislator,this.constitutional,this.content});
+  Votes votes;
+  Law(
+      {this.id,
+      this.legislator,
+      this.status,
+      this.timeStamp,
+      this.anonymousLegislator,
+      this.constitutional,
+      this.content,
+      this.votes});
 
-  factory Law.fromJson(Map<String,dynamic> json){
+  factory Law.fromJson(Map<String, dynamic> json) {
     return Law(
-      id: json["id"],
-      legislator: Member.fromJson(json["legislator"]),
-      status: json["status"],
-      timeStamp: DateTime.parse(json["timestamp"]),
-      content: Content.fromJson(json["content"]),
-      constitutional: json["constitutional"],
-      anonymousLegislator: json["constitutional"]
-    );
-  }
-}
-class Member{
-  int id;
-  String name,phone,token;
-  bool president,registered;
-  DateTime joined;
-  Member({this.id,this.name,this.phone,this.token,this.president,this.joined,this.registered});
-  
-  factory Member.fromJson(Map<String,dynamic> json){
-    return Member(
-      id: json["id"],
-      name: json["name"],
-      phone: json["phone"],
-      token: json["token"],
-      president: json["president"],
-      joined: DateTime.parse(json["joined"]),
-      registered: json["registered"]
-    );
-  }
-}
-abstract class Content{
-  int id;
-  String type;
-  String legislator;
-  Content({@required this.id,@required this.type,@required this.legislator});
-  factory Content.fromJson(Map<String,dynamic> json){
-    switch (json["type"]) {
-      case "ADD_MEMBER":
-        return ContentAddMember.fromJson(json);
-        break;
-      default:
-        return null;
-    }
+        id: json["id"],
+        legislator: Member.fromJson(json["legislator"]),
+        status: json["status"],
+        timeStamp: DateTime.parse(json["timestamp"]),
+        constitutional: json["constitutional"],
+        anonymousLegislator: json["constitutional"],
+        votes: Votes.formJson(json["votes"]));
   }
 }
 
-class ContentAddMember extends Content{
-  Member member;
-  String reason;
-  ContentAddMember({ this.reason,@required this.member,@required int id,@required String legislator}):
-    super(id: id,type: "ADD_MEMBER",legislator: legislator);
-  factory ContentAddMember.fromJson(Map<String,dynamic> json){
-    return ContentAddMember(
-      member: Member.fromJson(json["member"]),
-      id: json["id"],
-      reason: json["reason"]      
-    );
-  }
-}
-
-Map<String,dynamic> dummy = {
-    "id": 3,
-    "legislator": {
-        "id": 3,
-        "name": "חן פרח",
-        "phone": "972544805273",
-        "token": null,
-        "president": false,
-        "registered": false,
-        "joined": "2021-04-17T22:33:01.967+00:00"
-    },
-    "content": {
+Map<String, dynamic> dummy = {
+  "id": 1,
+  "legislator": {
+    "id": 2,
+    "name": "Amit Nave",
+    "phone": "972544805278",
+    "president": false,
+    "registered": true,
+    "joined": "2021-04-22T19:52:23.019+00:00"
+  },
+  "content": {"id": 3, "type": "FACT", "description": "שרבי השמין"},
+  "votes": [
+    {
+      "id": 1,
+      "voter": {
         "id": 2,
-        "type": "ADD_MEMBER",
-        "member": {
-            "id": 3,
-            "name": "חן פרח",
-            "phone": "972544805273",
-            "token": null,
-            "president": false,
-            "registered": false,
-            "joined": "2021-04-17T22:33:01.967+00:00"
-        },
-        "reason": "אני חן ואני מגניב"
+        "name": "Amit Nave",
+        "phone": "972544805278",
+        "president": false,
+        "registered": true,
+        "joined": "2021-04-22T19:52:23.019+00:00"
+      },
+      "vote": "FOR",
+      "reason": "אחלה חוק ראשון"
     },
-    "status": "UNDER_VOTE",
-    "timestamp": "2021-04-22T22:33:02.018+00:00",
-    "constitutional": false,
-    "anonymousLegislator": false
+    {
+      "id": 1,
+      "voter": {
+        "id": 2,
+        "name": "Dan binnun",
+        "phone": "972544805278",
+        "president": false,
+        "registered": true,
+        "joined": "2021-04-22T19:52:23.019+00:00"
+      },
+      "vote": "FOR",
+      "reason": "תרבותי"
+    },
+    {
+      "id": 1,
+      "voter": {
+        "id": 2,
+        "name": "Sharabi",
+        "phone": "972544805278",
+        "president": false,
+        "registered": true,
+        "joined": "2021-04-22T19:52:23.019+00:00"
+      },
+      "vote": "ABSTAIN",
+      "reason": "ביקורת בונה"
+    }
+  ],
+  "status": "CANCELED",
+  "timestamp": "2021-04-22T21:57:34.055+00:00",
+  "constitutional": true,
+  "anonymousLegislator": false,
+  "fakeName": "",
+  "contentString": "שרבי השמין"
 };
 Law dummy_rule = Law.fromJson(dummy);
