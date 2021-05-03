@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:democracy_sim/Widgets/Law/CommentBox.dart';
+import 'package:democracy_sim/models/Content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
@@ -35,7 +39,7 @@ class LawWidget extends StatelessWidget {
             Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                "${law.content.type.toLowerCase().replaceAll("_", " ")}: ${law.legislator.name}",
+                "${_getContentDescription()}",
                 style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400),
               ),
             ),
@@ -48,14 +52,24 @@ class LawWidget extends StatelessWidget {
       ),
     );
   }
-
+  IconData _getIcon(String type){
+    switch (type) {
+      case "FACT":
+        return Icons.fact_check;
+        break;
+      case "ADD_MEMBER":
+        return Icons.person;
+        break;
+      default:
+    }
+  }
   Widget getLawType() {
     Color typeColor = Color(0xD3863E00);
     return Container(
         child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.person, color: typeColor),
+        Icon(_getIcon(law.content.type), color: typeColor),
         SizedBox(
           width: 5,
         ),
@@ -69,81 +83,44 @@ class LawWidget extends StatelessWidget {
       ],
     ));
   }
+
+  String _getContentDescription(){
+    switch (law.content.type) {
+      case "FACT":
+        return (law.content as ContentFact).description;
+        break;
+        case "ADD_MEMBER":
+        return "add ${(law.content as ContentAddMember).member.name}";
+      default:
+        return "";
+    }
+  }
 }
-// class ContentW extends StatelessWidget {
-//   final Law law;
-//   ContentW(this.law);
-//   @override
-//   Widget build(BuildContext context) {
-//     switch (this.law.content.type) {
-//       case "ADD_MEMBER":
-//         return _member(law.content);
-//         break;
-//       default:
-//       return Container(child: Text("nothing here...."),);
-//     }
-//   }
-//   Widget _member(ContentAddMember content){
-//     return _LawDetailTable(law: law,);
-//     return Table(columnWidths: <int,TableColumnWidth> {
-//       0: FlexColumnWidth(0.4),
-//       1: FlexColumnWidth(0.8)
-//     },
-//     children: [
-//       TableRow(children: [
-//         Container(child: _row_head("Legislator".toUpperCase()),padding: EdgeInsets.all(3)),
-//         Container(child: _table_content(this.law.legislator.name),padding: EdgeInsets.all(3)),
-//       ]),
-//       TableRow(children: [
-//         Container(child: _row_head("Date".toUpperCase()),padding: EdgeInsets.all(3),),
-//         Container(child: _table_content( DateFormat("yyyy/mm/dd kk:mm").format(this.law.timeStamp)),padding: EdgeInsets.all(3)),
-//       ]),
-//       TableRow(children: [
-//         Container(child: _row_head("Votes".toUpperCase()),padding: EdgeInsets.all(3),),
-//         Container(child: _table_content(""),padding: EdgeInsets.all(3)),
-//       ]),
-//       TableRow(children: [
-//         Container(child: _row_head("status".toUpperCase()),padding: EdgeInsets.all(3),),
-//         Container(child: _table_content(law.status.toLowerCase().replaceAll("_", " ")),padding: EdgeInsets.all(3)),
-
-//       ]),
-//       TableRow(children: [
-//         Container(child: _row_head("results in".toUpperCase()),padding: EdgeInsets.all(3),),
-//         Container(child: CountdownTimer(widgetBuilder: (context, time) {
-//           if(time == null) return Text("time has passed");
-//           return _table_content("${time.hours}h ${time.min}m ${time.sec}s");
-//         } ,endTime: law.timeStamp.add(Duration(days: 1)).millisecondsSinceEpoch),padding: EdgeInsets.all(3)),
-//       ]),
-//     ],);
-
-//   }
-//   Widget _row_head(String text){
-//     return Text(text,style: TextStyle(color: Colors.grey[500],fontWeight: FontWeight.w400,fontSize: 17),);
-//   }
-//   Widget _table_content(String text){
-//     return Text(text,style:  TextStyle(color: Colors.black,fontWeight: FontWeight.w400,fontSize: 17),);
-//   }
-// }
 
 class _LawDetailTable extends StatelessWidget {
   final Law law;
   _LawDetailTable({this.law});
   @override
   Widget build(BuildContext context) {
-    return Table(columnWidths: <int,TableColumnWidth> {
-      0: FlexColumnWidth(0.4),
-      1: FlexColumnWidth(0.8)
-    },
-    children: [
-      _TableRow(content: _MyContainer(child: _content(law.legislator.name)),title: "Legislator".toUpperCase()).get(),
-      _TableRow(content: _MyContainer(child: _content(DateFormat("yyyy/mm/dd kk:mm").format(law.timeStamp))),title: "Date".toUpperCase()).get(),
-      _TableRow(content: _MyContainer(child: _content("")),title: "Votes".toUpperCase()).get(),
-      _TableRow(content: _MyContainer(child: _content(law.status.toLowerCase().replaceAll("_"," "))),title: "Status".toUpperCase()).get(),
-      _TableRow(content: _MyContainer(child: CountdownTimer(endTime: law.timeStamp.add(Duration(days: 1)).microsecondsSinceEpoch,widgetBuilder: (context, time) {
-              if(time == null) return Text("ended");
-              return _content("${time.hours}h ${time.min}m ${time.sec}s");
-            },)),title: "Ends in".toUpperCase()).get(),
-    ],
+    return Column(
+      children: [
+        Table(columnWidths: <int,TableColumnWidth> {
+          0: FlexColumnWidth(0.4),
+          1: FlexColumnWidth(0.8)
+        },
+        children: [
+          _TableRow(content: _MyContainer(child: _content(law.legislator.name)),title: "Legislator".toUpperCase()).get(),
+          _TableRow(content: _MyContainer(child: _content(DateFormat("yyyy/mm/dd kk:mm").format(law.timeStamp))),title: "Date".toUpperCase()).get(),
+          _TableRow(content: _MyContainer(child:  Comments(law: law)),title: "Votes".toUpperCase()).get(),
+          _TableRow(content: _MyContainer(child: _content(law.status.toLowerCase().replaceAll("_"," "))),title: "Status".toUpperCase()).get(),
+          _TableRow(content: _MyContainer(child: CountdownTimer(endTime: law.timeStamp.add(Duration(days: 1)).microsecondsSinceEpoch,widgetBuilder: (context, time) {
+                  if(time == null) return Text("ended");
+                  return _content("${time.hours}h ${time.min}m ${time.sec}s");
+                },)),title: "Ends in".toUpperCase()).get(),
+        ],
+        ),
+        SizedBox(height: 3,)
+      ],
     );
   }
   Widget _content(String text){

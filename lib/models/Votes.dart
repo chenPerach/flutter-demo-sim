@@ -18,9 +18,6 @@ class Vote {
 class Votes {
   List<Vote> votes;
   Votes({this.votes});
-  factory Votes.formJson(List<Map<String, dynamic>> json) {
-    List<Vote> l;
-    json.forEach((element) => l.add(Vote.fromJson(element)));
-    return Votes(votes: l);
-  }
+  factory Votes.formJson(List<Map<String, dynamic>> json) => Votes(
+      votes: List.generate(json.length, (index) => Vote.fromJson(json[index])));
 }

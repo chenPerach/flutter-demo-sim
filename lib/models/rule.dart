@@ -1,7 +1,6 @@
 import 'package:democracy_sim/models/Content.dart';
 import 'package:democracy_sim/models/Member.dart';
 import 'package:democracy_sim/models/Votes.dart';
-import 'package:flutter/cupertino.dart';
 
 class Law {
   int id;
@@ -29,7 +28,8 @@ class Law {
         timeStamp: DateTime.parse(json["timestamp"]),
         constitutional: json["constitutional"],
         anonymousLegislator: json["constitutional"],
-        votes: Votes.formJson(json["votes"]));
+        votes: Votes.formJson(json["votes"]),
+        content: Content.fromJson(json["content"]));
   }
 }
 
@@ -43,6 +43,7 @@ Map<String, dynamic> dummy = {
     "registered": true,
     "joined": "2021-04-22T19:52:23.019+00:00"
   },
+  "type":"FACT",
   "content": {"id": 3, "type": "FACT", "description": "שרבי השמין"},
   "votes": [
     {
@@ -56,6 +57,18 @@ Map<String, dynamic> dummy = {
         "joined": "2021-04-22T19:52:23.019+00:00"
       },
       "vote": "FOR",
+      "reason": "אחלה חוק ראשון"
+    },{
+      "id": 1,
+      "voter": {
+        "id": 2,
+        "name": "Amit Nave",
+        "phone": "972544805278",
+        "president": false,
+        "registered": true,
+        "joined": "2021-04-22T19:52:23.019+00:00"
+      },
+      "vote": "AGAINST",
       "reason": "אחלה חוק ראשון"
     },
     {

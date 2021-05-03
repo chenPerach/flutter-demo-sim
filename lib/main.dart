@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
-import 'package:intl/intl.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,17 +21,14 @@ class App extends StatelessWidget {
       // Initialize FlutterFire:
       future: _initialization,
       builder: (context, snapshot) {
-        // Check for errors
         if (snapshot.hasError) {
           return Page(body: Text("has error"));
         }
 
-        // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           return MyApp();
         }
 
-        // Otherwise, show something whilst waiting for initialization to complete
         return CircularProgressIndicator();
       },
     );
@@ -82,9 +77,12 @@ class HomePage extends StatelessWidget {
           LawWidget(law: dummy_rule),
           LawWidget(law: dummy_rule),
           LawWidget(law: dummy_rule),
-          
-          
-
+          LawWidget(law: dummy_rule),
+          LawWidget(law: dummy_rule),
+          LawWidget(law: dummy_rule),
+          LawWidget(law: dummy_rule),
+          LawWidget(law: dummy_rule),
+          LawWidget(law: dummy_rule),
         ],
       ),
     );
