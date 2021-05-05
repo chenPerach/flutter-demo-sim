@@ -2,8 +2,7 @@ import 'package:democracy_sim/models/Member.dart';
 import 'package:flutter/cupertino.dart';
 
 abstract class Content {
-  int id;
-  String type;
+  String type,id;
   // Member legislator;
   Content({@required this.id, @required this.type});
   factory Content.fromJson(Map<String, dynamic> json) {
@@ -27,7 +26,7 @@ class ContentFact extends Content {
   String description;
   ContentFact(
       {@required this.description,
-      @required int id})
+      @required String id})
       : super(id: id, type: "FACT");
   factory ContentFact.fromJson(Map<String, dynamic> json) {
     return ContentFact(
@@ -42,7 +41,7 @@ class ContentAddMember extends Content {
   ContentAddMember(
       {this.reason,
       @required this.member,
-      @required int id})
+      @required String id})
       : super(id: id, type: "ADD_MEMBER");
   factory ContentAddMember.fromJson(Map<String, dynamic> json) {
     return ContentAddMember(

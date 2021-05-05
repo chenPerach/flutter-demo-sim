@@ -3,7 +3,7 @@ import 'package:democracy_sim/models/Member.dart';
 import 'package:democracy_sim/models/Votes.dart';
 
 class Law {
-  int id;
+  String id;
   Member legislator;
   String status;
   DateTime timeStamp;
@@ -34,9 +34,9 @@ class Law {
 }
 
 Map<String, dynamic> dummy = {
-  "id": 1,
+  "id": "1",
   "legislator": {
-    "id": 2,
+    "id": "2",
     "name": "Amit Nave",
     "phone": "972544805278",
     "president": false,

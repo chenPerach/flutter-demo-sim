@@ -1,6 +1,5 @@
 class Member {
-  int id;
-  String name, phone, token;
+  String id, name, phone, token;
   bool president, registered;
   DateTime joined;
   Member(

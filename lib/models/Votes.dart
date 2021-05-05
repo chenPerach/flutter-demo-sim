@@ -1,7 +1,7 @@
 import 'package:democracy_sim/models/Member.dart';
 
 class Vote {
-  int id;
+  String id;
   Member voter;
   String vote, reason;
   Vote({this.id, this.voter, this.reason, this.vote});
